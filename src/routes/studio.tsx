@@ -179,7 +179,7 @@ function Studio() {
                 {palettes.map((p) => {
                   const sel = palette.id === p.id;
                   return (
-                    <button key={p.id} type="button" onClick={() => setPalette(p)}
+                    <button key={p.id} type="button" onClick={() => { setPalette(p); setDominantColor(p.essentials[0]); }}
                       className={`group relative overflow-hidden rounded-xl border p-3 text-left transition-all ${sel ? "border-primary shadow-[var(--shadow-card)]" : "border-border hover:border-primary/60"}`}>
                       <div className="flex h-8 w-full overflow-hidden rounded">
                         {p.essentials.map((c) => <div key={c} style={{ background: c }} className="flex-1" />)}
