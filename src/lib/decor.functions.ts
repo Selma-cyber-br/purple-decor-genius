@@ -36,30 +36,47 @@ const FORBIDDEN = {
 function buildPrompt(data: GenerateDecorInput) {
   const fonctionnalite = FORBIDDEN[data.roomType] ?? "Respecter strictement la fonction d'origine de la pièce.";
   const budgetLine = data.budgetDZD && data.budgetDZD > 0
-    ? `Budget client ≈ ${new Intl.NumberFormat("fr-DZ").format(data.budgetDZD)} DA — choisir des matériaux et finitions cohérents avec ce budget (ni trop pauvre, ni démesurément luxueux).`
+    ? `Budget client ≈ ${new Intl.NumberFormat("fr-DZ").format(data.budgetDZD)} DA — choisir des matériaux et finitions cohérents avec ce budget.`
     : "";
+  const intensityMap: Record<string, string> = {
+    doux: "Application DOUCE de la palette : fonds neutres dominants, couleurs essentielles utilisées par petites touches (coussins, art mural, accessoires).",
+    equilibre: "Application ÉQUILIBRÉE : un mur ou un grand meuble dans la couleur principale, le reste en nuances proches et neutres.",
+    audacieux: "Application AUDACIEUSE : couleurs essentielles présentes sur les grandes surfaces (mur d'accent saturé, canapé/tête de lit colorés, textiles riches).",
+  };
+  const intensityLine = data.paletteIntensity ? intensityMap[data.paletteIntensity] : "";
+  const dominantLine = data.dominantColor
+    ? `Couleur dominante imposée : ${data.dominantColor.startsWith("#") ? data.dominantColor : "#" + data.dominantColor} — c'est la couleur la plus présente du rendu.`
+    : "";
+  const styleLine = data.style ? `Style décoratif : ${data.style} — appliquer rigoureusement ses codes (mobilier, matériaux, motifs, finitions).` : "";
+
   return `Tu es architecte d'intérieur de luxe spécialiste du marché algérien.
 
-OBJECTIF : Re-décorer la pièce visible sur la photo fournie, en générant UNE seule image photoréaliste finale de la même pièce.
+OBJECTIF : Re-décorer la pièce visible sur la photo, en générant UNE seule image photoréaliste finale de la même pièce, sous le même angle.
 
-CONTRAINTES ABSOLUES — respect du réel (priorité maximale) :
-1. Conserver EXACTEMENT la géométrie de la pièce : murs, angles, hauteur sous plafond.
-2. Conserver EXACTEMENT la position des fenêtres (côté, taille, forme) — si la fenêtre est à droite sur la photo, elle reste à droite.
+CONTRAINTES ABSOLUES — respect du réel (priorité maximale, NON NÉGOCIABLE) :
+1. Conserver EXACTEMENT la géométrie : murs, angles, hauteur sous plafond, proportions.
+2. Conserver EXACTEMENT la position et la taille des fenêtres — si la fenêtre est à gauche, elle reste à gauche ; à droite reste à droite.
 3. Conserver EXACTEMENT la position des portes.
-4. Conserver la position des éléments fixes : lavabo, WC, baignoire, plan de cuisine, cheminée, radiateurs, prises apparentes — s'ils sont à gauche, ils restent à gauche.
-5. Conserver le cadrage et l'angle de vue de la photo originale.
+4. Conserver les éléments fixes : lavabo, WC, baignoire, plan de cuisine, cheminée, radiateurs, prises, interrupteurs — gauche reste gauche, droite reste droite.
+5. Conserver le cadrage et l'angle de vue de la photo originale (même focale, même point de vue).
 6. Fonction de la pièce (${data.roomType}) : ${fonctionnalite}
+
+DÉCOR EXISTANT :
+- Si la pièce contient déjà du mobilier ou de la décoration, tu PEUX les remplacer librement (canapé, table, tapis, rideaux, luminaires, art mural, peinture des murs non porteurs).
+- Tu NE DOIS JAMAIS modifier les éléments structurels listés ci-dessus.
 
 DIRECTION CRÉATIVE :
 - Palette imposée "${data.palette.name}" : couleurs essentielles ${data.palette.essentials.join(", ")} ; nuances proches autorisées ${data.palette.nearby.join(", ")}.
 - Ne pas introduire de couleurs hors de cette palette élargie.
-- Style : luxe algérien contemporain, matières nobles (velours, marbre, laiton, bois, zellige).
-- Lumière naturelle douce, ambiance magazine de décoration.
+${dominantLine}
+${intensityLine}
+${styleLine}
+- Lumière naturelle douce, ambiance magazine de décoration, matières nobles (velours, marbre, laiton, bois, zellige) cohérentes avec le style choisi.
 ${budgetLine}
 ${data.wishes ? `- Souhaits client : ${data.wishes}` : ""}
 ${data.variantHint ? `- Variante : ${data.variantHint}` : ""}
 
-LIVRABLE : une seule image finale photoréaliste, haute qualité, même cadrage que la photo d'origine.`;
+LIVRABLE : une seule image finale photoréaliste, haute qualité, même cadrage que l'original.`;
 }
 
 async function callGemini(apiKey: string, prompt: string, imageDataUrl: string): Promise<GenerateDecorResult> {
