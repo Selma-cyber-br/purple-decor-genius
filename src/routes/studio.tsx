@@ -40,6 +40,9 @@ function Studio() {
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
   const [roomType, setRoomType] = useState("Salon");
   const [palette, setPalette] = useState<Palette>(palettes[0]);
+  const [dominantColor, setDominantColor] = useState<string>(palettes[0].essentials[0]);
+  const [paletteIntensity, setPaletteIntensity] = useState<"doux" | "equilibre" | "audacieux">("equilibre");
+  const [style, setStyle] = useState<string>("Moderne");
   const [budget, setBudget] = useState<number>(0);
   const [wishes, setWishes] = useState("");
 
