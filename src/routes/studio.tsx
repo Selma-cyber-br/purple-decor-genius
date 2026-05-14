@@ -17,6 +17,12 @@ export const Route = createFileRoute("/studio")({
 });
 
 const ROOM_TYPES = ["Salon", "Chambre", "Cuisine", "Salle à manger", "Salle de bain", "Bureau", "Entrée"];
+const STYLES = ["Moderne", "Classique", "Bohème", "Minimaliste", "Art Déco", "Oriental contemporain", "Industriel", "Scandinave"];
+const INTENSITIES: { id: "doux" | "equilibre" | "audacieux"; label: string; desc: string }[] = [
+  { id: "doux", label: "Doux", desc: "Touches subtiles, fonds neutres" },
+  { id: "equilibre", label: "Équilibré", desc: "Un mur ou meuble d'accent" },
+  { id: "audacieux", label: "Audacieux", desc: "Couleurs sur grandes surfaces" },
+];
 
 type Variant = {
   result: GenerateDecorResult;
@@ -34,6 +40,9 @@ function Studio() {
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
   const [roomType, setRoomType] = useState("Salon");
   const [palette, setPalette] = useState<Palette>(palettes[0]);
+  const [dominantColor, setDominantColor] = useState<string>(palettes[0].essentials[0]);
+  const [paletteIntensity, setPaletteIntensity] = useState<"doux" | "equilibre" | "audacieux">("equilibre");
+  const [style, setStyle] = useState<string>("Moderne");
   const [budget, setBudget] = useState<number>(0);
   const [wishes, setWishes] = useState("");
 
@@ -71,7 +80,7 @@ function Studio() {
       const hints = ["Ambiance principale, équilibrée", "Variation plus sombre et intime", "Variation plus lumineuse et aérée"];
       const results = await Promise.all(
         hints.map((h) =>
-          generate({ data: { imageDataUrl, roomType, palette, budgetDZD: budget || undefined, wishes, variantHint: h } })
+          generate({ data: { imageDataUrl, roomType, palette, dominantColor, paletteIntensity, style, budgetDZD: budget || undefined, wishes, variantHint: h } })
         )
       );
       const v: Variant[] = results.map((r) => ({ result: r, items: null, loadingItems: true }));
@@ -170,7 +179,7 @@ function Studio() {
                 {palettes.map((p) => {
                   const sel = palette.id === p.id;
                   return (
-                    <button key={p.id} type="button" onClick={() => setPalette(p)}
+                    <button key={p.id} type="button" onClick={() => { setPalette(p); setDominantColor(p.essentials[0]); }}
                       className={`group relative overflow-hidden rounded-xl border p-3 text-left transition-all ${sel ? "border-primary shadow-[var(--shadow-card)]" : "border-border hover:border-primary/60"}`}>
                       <div className="flex h-8 w-full overflow-hidden rounded">
                         {p.essentials.map((c) => <div key={c} style={{ background: c }} className="flex-1" />)}
@@ -192,8 +201,48 @@ function Studio() {
             </div>
 
             <div>
+              <label className="mb-2 block text-sm">4. Couleur dominante (la plus présente dans le rendu)</label>
+              <div className="flex flex-wrap gap-2">
+                {[...palette.essentials, ...palette.nearby].map((c) => {
+                  const sel = dominantColor.toLowerCase() === c.toLowerCase();
+                  return (
+                    <button key={c} type="button" onClick={() => setDominantColor(c)}
+                      style={{ background: c }}
+                      className={`h-9 w-9 rounded-full border-2 transition-transform ${sel ? "border-primary scale-110 ring-2 ring-[var(--color-gold)]" : "border-border hover:scale-105"}`}
+                      aria-label={c} title={c} />
+                  );
+                })}
+              </div>
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm">5. Intensité de la palette</label>
+              <div className="grid grid-cols-3 gap-2">
+                {INTENSITIES.map((it) => {
+                  const sel = paletteIntensity === it.id;
+                  return (
+                    <button key={it.id} type="button" onClick={() => setPaletteIntensity(it.id)}
+                      className={`rounded-xl border p-2 text-left transition-all ${sel ? "border-primary bg-primary/5" : "border-border hover:border-primary/60"}`}>
+                      <p className="text-sm text-primary">{it.label}</p>
+                      <p className="mt-0.5 text-[10px] text-muted-foreground">{it.desc}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm">6. Style décoratif</label>
+              <div className="flex flex-wrap gap-2">
+                {STYLES.map((s) => (
+                  <Chip key={s} active={style === s} onClick={() => setStyle(s)}>{s}</Chip>
+                ))}
+              </div>
+            </div>
+
+            <div>
               <div className="mb-1 flex items-center justify-between text-sm">
-                <span>4. Budget (optionnel)</span>
+                <span>7. Budget (optionnel)</span>
                 <span className="text-primary">{budget > 0 ? formatDZD(budget) : "Sans contrainte"}</span>
               </div>
               <input type="range" min={0} max={2_000_000} step={50_000} value={budget}
@@ -205,7 +254,7 @@ function Studio() {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm">5. Vos souhaits (optionnel)</label>
+              <label className="mb-2 block text-sm">8. Vos souhaits (optionnel)</label>
               <textarea value={wishes} onChange={(e) => setWishes(e.target.value)} rows={3}
                 placeholder="Ex : ambiance chaleureuse, tapis oriental, lumière douce…"
                 className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none" />
