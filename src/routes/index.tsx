@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Search, Globe, Sparkles } from "lucide-react";
 import heroImage from "@/assets/hero-decidor.jpg";
 import { categories } from "@/lib/categories";
@@ -75,18 +75,18 @@ function Index() {
                 projet de décoration complet.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <button
-                  type="button"
+                <a
+                  href="#catalogue"
                   className="rounded-full bg-primary px-6 py-3 text-primary-foreground shadow-[var(--shadow-luxe)] transition-all duration-300 hover:bg-secondary"
                 >
                   Explorer le catalogue
-                </button>
-                <button
-                  type="button"
+                </a>
+                <Link
+                  to="/studio"
                   className="rounded-full border border-[var(--color-gold)] bg-transparent px-6 py-3 text-foreground transition-colors duration-300 hover:bg-[color-mix(in_oklab,var(--color-gold)_18%,transparent)]"
                 >
-                  Essayer la déco IA
-                </button>
+                  Essayer la déco IA →
+                </Link>
               </div>
               <dl className="mt-10 grid max-w-md grid-cols-3 gap-6 border-t border-border pt-6">
                 {[
