@@ -17,6 +17,12 @@ export const Route = createFileRoute("/studio")({
 });
 
 const ROOM_TYPES = ["Salon", "Chambre", "Cuisine", "Salle à manger", "Salle de bain", "Bureau", "Entrée"];
+const STYLES = ["Moderne", "Classique", "Bohème", "Minimaliste", "Art Déco", "Oriental contemporain", "Industriel", "Scandinave"];
+const INTENSITIES: { id: "doux" | "equilibre" | "audacieux"; label: string; desc: string }[] = [
+  { id: "doux", label: "Doux", desc: "Touches subtiles, fonds neutres" },
+  { id: "equilibre", label: "Équilibré", desc: "Un mur ou meuble d'accent" },
+  { id: "audacieux", label: "Audacieux", desc: "Couleurs sur grandes surfaces" },
+];
 
 type Variant = {
   result: GenerateDecorResult;
