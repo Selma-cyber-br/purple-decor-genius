@@ -80,7 +80,7 @@ function Studio() {
       const hints = ["Ambiance principale, équilibrée", "Variation plus sombre et intime", "Variation plus lumineuse et aérée"];
       const results = await Promise.all(
         hints.map((h) =>
-          generate({ data: { imageDataUrl, roomType, palette, budgetDZD: budget || undefined, wishes, variantHint: h } })
+          generate({ data: { imageDataUrl, roomType, palette, dominantColor, paletteIntensity, style, budgetDZD: budget || undefined, wishes, variantHint: h } })
         )
       );
       const v: Variant[] = results.map((r) => ({ result: r, items: null, loadingItems: true }));
