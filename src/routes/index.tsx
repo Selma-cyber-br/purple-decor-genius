@@ -143,9 +143,11 @@ function Index() {
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((cat, i) => (
-            <article
+            <Link
               key={cat.slug}
-              className="group relative overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-card)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-luxe)]"
+              to="/catalog/$slug"
+              params={{ slug: cat.slug }}
+              className="group relative block overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-card)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-luxe)]"
             >
               <div className="aspect-[4/3] overflow-hidden">
                 <img
@@ -167,7 +169,7 @@ function Index() {
                   Découvrir →
                 </span>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </section>
