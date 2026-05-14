@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { categories } from "@/lib/categories";
-import { productsByCategory, formatDZD } from "@/lib/catalog";
+import { productsByCategory, formatDZD, type Product } from "@/lib/catalog";
 
 export const Route = createFileRoute("/catalog/$slug")({
   head: ({ params }) => ({
@@ -56,7 +56,7 @@ function CatalogPage() {
           </div>
         ) : (
           <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {products.map((p) => (
+            {products.map((p: Product) => (
               <article key={p.id} className="group overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-card)] transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-luxe)]">
                 <div className="aspect-[4/3] overflow-hidden">
                   <img src={p.image} alt={p.name} loading="lazy"
