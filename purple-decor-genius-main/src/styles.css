@@ -1,0 +1,77 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-serif: "Times New Roman", Times, serif;
+  --font-sans: "Times New Roman", Times, serif;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-gold: var(--gold);
+  --color-gold-foreground: var(--gold-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --shadow-luxe: var(--shadow-luxe);
+  --shadow-card: var(--shadow-card);
+}
+
+:root {
+  --radius: 0.5rem;
+  /* Ivoire #FAF8F5 */
+  --background: oklch(0.978 0.005 80);
+  /* Anthracite #2C2C2C */
+  --foreground: oklch(0.27 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.27 0 0);
+  /* Mauve profond #6B4E8C */
+  --primary: oklch(0.46 0.11 305);
+  --primary-foreground: oklch(0.98 0.005 80);
+  /* Lavande #9B7BB8 */
+  --secondary: oklch(0.62 0.10 305);
+  --secondary-foreground: oklch(0.98 0.005 80);
+  /* Gris perle #E8E4E0 */
+  --muted: oklch(0.92 0.005 70);
+  --muted-foreground: oklch(0.45 0.01 305);
+  --accent: oklch(0.92 0.02 305);
+  --accent-foreground: oklch(0.46 0.11 305);
+  /* Or champagne #C8A96E */
+  --gold: oklch(0.74 0.09 80);
+  --gold-foreground: oklch(0.27 0 0);
+  --destructive: oklch(0.55 0.22 27);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.90 0.01 305);
+  --input: oklch(0.92 0.005 70);
+  --ring: oklch(0.46 0.11 305);
+
+  --shadow-luxe: 0 20px 50px -20px color-mix(in oklab, var(--primary) 35%, transparent);
+  --shadow-card: 0 8px 24px -8px color-mix(in oklab, var(--primary) 18%, transparent);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html, body {
+    font-family: var(--font-serif);
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    -webkit-font-smoothing: antialiased;
+  }
+}
